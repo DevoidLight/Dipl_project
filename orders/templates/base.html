@@ -7,10 +7,14 @@
 <body>
     <header>
         <a href="{% url 'admin:index' %}">Admin</a>
+        <a href="{% url 'create' %}">Create</a>
+        <a href="{% url 'work' %}">Work</a>
     </header>
     <main>
         {% block content %}
         {% endblock %}
     </main>
+    {% block script %}
+    {% endblock %}
 </body>
 </html>
