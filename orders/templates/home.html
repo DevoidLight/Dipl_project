@@ -1,5 +1,72 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        select {
+            width: 100%;
+            padding: 5px;
+        }
+    </style>
     <h1>Home page</h1>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>deploy</th>
+            <th>status</th>
+        </tr>
+       
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.deploy }}</td>
+                <td>
+                    <select class="status-select" data-order-id="{{ order.id }}">
+                        <option value="accept">{{ order.status }}</option>
+                        {% if order.status != 'Оплачено' %}
+                            <option value="Оплачено">Оплачено</option>
+                        {% endif %}
+                    </select>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% block script %}
+        <script>
+            document.addEventListener("DOMContentLoaded", (event) => {
+                csrftoken = Cookies.get('csrftoken')
+                const statusSelects = document.querySelectorAll('.status-select')
+
+                statusSelects.forEach(select => {
+                    select.addEventListener('change', function() {
+                        const orderId = this.dataset.orderId
+                        const newStatus = this.value
+                        const data = {
+                            id: orderId,
+                            status: newStatus
+                        }
+                        fetch('', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrftoken
+                            },
+                            body: JSON.stringify(data)
+                        })
+                    })
+                })
+            })
+        </script>
+    {% endblock %}
 {% endblock %}

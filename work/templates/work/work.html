@@ -2,11 +2,33 @@
 
 {% block content %}
     <h1>Work page</h1>
-    <button>Get order</button>
+    <div class="order">
+        <button class="get-order">Get order</button>
+    </div>
 {% endblock %}
 
 {% block script %}
     <script>
-        
+        document.addEventListener("DOMContentLoaded", (event) => {
+            csrftoken = Cookies.get('csrftoken')
+            const getOrder = document.querySelector('.get-order')
+            const order = document.querySelector('.order')
+
+            getOrder.addEventListener('click', function() {
+
+                fetch('', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken':csrftoken
+                    }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    order.innerHTML = html
+                    
+                })
+            })
+        })
     </script>
 {% endblock %}
