@@ -11,7 +11,7 @@ def home(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         order = Orders.objects.get(id=data.get('id'))
-        order.status = data.get('status')
+        order.status = 'paid'
         order.save()
     return render(request, 'home.html', {'orders': orders})
 
@@ -21,8 +21,9 @@ def create(request):
         form = OrderCreateForm(request.POST)
         print('post')
         if form.is_valid():
-            print('valid success')
-            form.save()
+            order = form.save(commit=False)
+            order.manager = request.user
+            order.save()
             return redirect(reverse('home'))
     else:
         form = OrderCreateForm()

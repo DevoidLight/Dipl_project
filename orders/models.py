@@ -4,12 +4,14 @@ from users.models import User
 
 # Create your models here.
 class Orders(models.Model):
-    class Status(models.TextChoices):
-        ACCEPT = 'Принят'
-        PAID = 'Оплачено'
-        PRINTED = 'Напечатано'
-        PACKERD = 'Упакован'
-        COMPLETE = 'Завершен'
+    STATUS_CHOICES = (
+        ('accept', 'Принят'),
+        ('paid', 'Оплачен'),
+        ('printing', 'Печать'),
+        ('gluing', 'Клейка страз'),
+        ('packing', 'Упаковка'),
+        ('done', 'Завершен'),
+    )
     manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
                                 related_name='managed_orders')
     printer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
@@ -26,9 +28,10 @@ class Orders(models.Model):
     deploy = models.DateField()
     school = models.CharField(max_length=128)
     class_number = models.CharField(max_length=24)
+    client_phone = models.CharField(max_length=20)
     status = models.CharField(max_length=10,
-                              choices=Status.choices,
-                              default=Status.ACCEPT)
+                              choices=STATUS_CHOICES,
+                              default='accept')
 
     class Meta:
         ordering = ['deploy']

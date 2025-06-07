@@ -32,12 +32,16 @@
                 <td>{{ order.id }}</td>
                 <td>{{ order.deploy }}</td>
                 <td>
+                    {% if order.status == 'accept' %}
                     <select class="status-select" data-order-id="{{ order.id }}">
                         <option value="accept">{{ order.status }}</option>
                         {% if order.status != 'Оплачено' %}
-                            <option value="Оплачено">Оплачено</option>
+                            <option value="Оплачен">Оплачен</option>
                         {% endif %}
                     </select>
+                    {% else %}
+                        {{ order.status }}
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
