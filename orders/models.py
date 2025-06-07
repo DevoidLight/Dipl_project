@@ -29,6 +29,10 @@ class Orders(models.Model):
     school = models.CharField(max_length=128)
     class_number = models.CharField(max_length=24)
     client_phone = models.CharField(max_length=20)
+    count = models.IntegerField(null=True, blank=True)
+    rhinestones = models.BooleanField(default=False)
+    count_rhinestones = models.IntegerField(null=True, blank=True)
+    address = models.CharField(max_length=256, null=True, blank=True)
     status = models.CharField(max_length=10,
                               choices=STATUS_CHOICES,
                               default='accept')

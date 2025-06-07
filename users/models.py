@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     ROLES = (
         ('admin', 'Администратор'),
-        ('direcor', 'Директор'),
+        ('director', 'Директор'),
         ('printer', 'Печатник'),
         ('gluer', 'Клейщик страз'),
         ('manager', 'Менеджер по заказам'),
