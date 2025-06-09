@@ -10,7 +10,6 @@ def work(request):
         orders = Orders.objects.all()
         if request.user.role == 'printer':
             for order in orders:
-                print(order.status)
                 if order.status == 'paid':
                     order.printer = request.user
                     order.save()
@@ -29,9 +28,12 @@ def work(request):
 
 def endprint(request, order_id):
     order = Orders.objects.get(id=order_id)
-    if order.status == 'paid':
-        order.status = 'printing'
     if order.status == 'printing':
         order.status = 'gluing'
+    if order.status == 'paid':
+        ribbon = order.ribbon
+        ribbon.length = ribbon.length - (order.count * 2)
+        ribbon.save()
+        order.status = 'printing'
     order.save()
     return JsonResponse({'status': 'succes'})

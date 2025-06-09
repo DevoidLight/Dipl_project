@@ -9,6 +9,8 @@ from users.decorators import role_required
 # Create your views here.
 def home(request):
     user = request.user
+    if not user.is_authenticated:
+        return redirect(reverse('login'))
     if user.role in ('printer', 'gluer', 'packer'):
         return redirect(reverse('work'))
     if user.role in ('manager', 'director'):
