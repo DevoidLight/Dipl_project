@@ -20,8 +20,18 @@ def ribbon_create(request):
     if request.method == 'POST':
         form = RibbonsCreate(data=request.POST)
         if form.is_valid():
-            form.save()
-            return redirect(reverse('orders'))
+            color = form.cleaned_data['color']
+            length = form.cleaned_data['length']
+            price = form.cleaned_data['base_price']
+            ribbon, created = Ribbons.objects.get_or_create(color=color,
+                                                            defaults={
+                                                                'length': length,
+                                                                'base_price': price
+                                                            })
+            if not created:
+                ribbon.length += length
+            ribbon.save()
+            return redirect(reverse('products'))
     else:
         form = RibbonsCreate()
     return render(request, 'products/ribbon_create.html', {'form': form})
@@ -31,8 +41,18 @@ def paint_create(request):
     if request.method == 'POST':
         form = PaintsCreate(data=request.POST)
         if form.is_valid():
-            form.save()
-            return redirect(reverse('orders'))
+            color = form.cleaned_data['color']
+            length = form.cleaned_data['length']
+            price = form.cleaned_data['base_price']
+            paint, created = Paints.objects.get_or_create(color=color,
+                                                          defaults={
+                                                              'length': length,
+                                                              'base_price': price
+                                                          })
+            if not created:
+                paint.length += length
+            paint.save()
+            return redirect(reverse('products'))
     else:
         form = PaintsCreate()
     return render(request, 'products/paint_create.html', {'form': form})

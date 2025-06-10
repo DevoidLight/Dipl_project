@@ -5,7 +5,6 @@
     <div class="order">
         <button class="get-order">Get order</button>
     </div>
-    <button class="end-order" style="display: none;">Завершить заказ</button>
 {% endblock %}
 
 {% block script %}
@@ -14,7 +13,6 @@
             csrftoken = Cookies.get('csrftoken')
             const getOrder = document.querySelector('.get-order')
             const order = document.querySelector('.order')
-            const endOrder = document.querySelector('.end-order')
             getOrder.addEventListener('click', function() {
 
                 fetch('', {
@@ -27,9 +25,8 @@
                 .then(response => response.text())
                 .then(html => {
                     order.innerHTML = html
-                    endOrder.style.display = 'block'
                     const orderId = document.getElementById('order-id').value
-
+                    const endOrder = document.querySelector('.end-order')
                     endOrder.dataset.orderId = orderId
                 })
             })

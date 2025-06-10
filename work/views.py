@@ -14,25 +14,33 @@ def work(request):
                     order.printer = request.user
                     order.save()
                     return render(request, 'work/include/order.html', {'order': order})
-            return HttpResponse('<h3>Заказов больше нет</h3>')
+            
         if request.user.role == 'gluer':
             for order in orders:
-                print(order.status)
-                print(order.rhinestones)
                 if order.status == 'printing' and order.rhinestones:
                     order.gluer = request.user
                     order.save()
                     return render(request, 'work/include/gluer.html', {'order': order})
-
+        if request.user.role == 'packer':
+            for order in orders:
+                if order.status == 'gluer':
+                    order.packer = request.user
+                    order.save()
+                    return render(request, 'work/include/packer.html', {'order': order})
+        return HttpResponse('<h3>Заказов больше нет</h3>')
     return render(request, 'work/work.html')
 
 def endprint(request, order_id):
     order = Orders.objects.get(id=order_id)
+    if order.start  == 'gluing':
+        order.status == 'done'
     if order.status == 'printing':
         order.status = 'gluing'
     if order.status == 'paid':
         ribbon = order.ribbon
         ribbon.length = ribbon.length - (order.count * 2)
+        paint = order.paint
+        paint.length = paint.length - (order.count * 2)
         ribbon.save()
         order.status = 'printing'
     order.save()

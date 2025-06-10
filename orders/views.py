@@ -5,6 +5,7 @@ from .forms import OrderCreateForm
 from django.urls import reverse
 from .models import Orders
 from users.decorators import role_required
+from .reports import generate_director_report
 
 # Create your views here.
 def home(request):
@@ -15,6 +16,18 @@ def home(request):
         return redirect(reverse('work'))
     if user.role in ('manager', 'director'):
         return redirect(reverse('orders'))
+    
+@role_required('director')
+def director_report(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if start_date and end_date:
+        report_data = generate_director_report(start_date, end_date)
+    else:
+        report_data = generate_director_report(None, None)
+    
+    return render(request, 'order/director_report.html', report_data)
 
 @role_required('manager', 'director')
 def orders(request):
