@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from users.decorators import role_required
 
 # Create your views here.
-@role_required('printer', 'gluer', 'director', 'packer')
+@role_required('printer', 'gluer', 'packer')
 def work(request):
     if request.method == 'POST':
         orders = Orders.objects.all()
@@ -28,14 +28,21 @@ def work(request):
                     order.save()
                     return render(request, 'work/include/packer.html', {'order': order})
         return HttpResponse('<h3>Заказов больше нет</h3>')
-    return render(request, 'work/work.html')
+    if request.user.role == 'printer':
+        orders_count = Orders.objects.filter(status='paid').count()
+        context = {'orders_count': orders_count}
+    if request.user.role == 'gluer':
+        orders_count = Orders.objects.filter(status='printing').count()
+        context = {'orders_count': orders_count}
+    if request.user.role == 'packer':
+        orders_count = Orders.objects.filter(status='gluing').count()
+        context = {'orders_count': orders_count}
+    return render(request, 'work/work.html', context)
 
 def endprint(request, order_id):
     order = Orders.objects.get(id=order_id)
-    print(order.status)
     if order.status  == 'gluing':
         order.status = 'done'
-        print(order.status)
     if order.status == 'printing':
         order.status = 'gluing'
     if order.status == 'paid':
@@ -47,5 +54,4 @@ def endprint(request, order_id):
         paint.save()
         order.status = 'printing'
     order.save()
-    print(order.status)
     return JsonResponse({'status': 'succes'})

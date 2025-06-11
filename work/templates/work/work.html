@@ -1,17 +1,167 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Work page</h1>
-    <div class="order">
-        <button class="get-order">Get order</button>
+    <div class="work-page">
+        <h1 class="work-title">Work page</h1>
+        <div class="work-container">
+            <button class="work-get-order">Get order</button>
+            <p class="work-orders-count">Всего заказов - <span class="count-value">{{ orders_count }}</span></p>
+        </div>
     </div>
+
+    <style>
+        /* Основные стили страницы */
+        .work-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .work-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .work-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .work-get-order {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .work-get-order:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .work-orders-count {
+            font-size: 18px;
+            color: #34495e;
+        }
+
+        .count-value {
+            font-weight: bold;
+            color: #16a085;
+        }
+
+        /* Стили для модального окна с заказом */
+        .order-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .order-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .order-header {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .order-detail-item {
+            margin-bottom: 10px;
+        }
+
+        .order-detail-label {
+            font-weight: 600;
+            color: #7f8c8d;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .order-detail-value {
+            color: #34495e;
+            font-size: 16px;
+        }
+
+        .order-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .order-end-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .order-end-button:hover {
+            background-color: #219653;
+        }
+
+        /* Адаптивные стили */
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .work-container {
+                padding: 20px;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block script %}
     <script>
         document.addEventListener("DOMContentLoaded", (event) => {
             const csrftoken = Cookies.get('csrftoken');
-            const getOrder = document.querySelector('.get-order');
+            const getOrder = document.querySelector('.work-get-order');
             const order = document.querySelector('.order');
             let endOrder;
 

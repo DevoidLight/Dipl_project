@@ -84,15 +84,14 @@
 <body>
     <header class="header-nav">
         <div class="nav-container">
-            {% if user.role == 'director' %}
-                <div class="main-nav">
+            <div class="main-nav">
+                {% if user.role == 'director' %}
                     <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
                     <a class="nav-link" href="{% url 'work' %}">Work</a>
                     <a class="nav-link" href="{% url 'orders' %}">Orders</a>
                     <a class="nav-link" href="{% url 'products' %}">Products</a>
                     <a class="nav-link" href="{% url 'director_report' %}">Report</a>
                     <a class="nav-link" href="{% url 'register' %}">Добавить аккаунт</a>
-
                     <div class="nav-item">
                         <a class="nav-link dropdown-toggle" href="#" role="button">Добавить продукт</a>
                         <ul class="dropdown-menu">
@@ -101,8 +100,9 @@
                             <li><a class="dropdown-item" href="{% url 'template_create' %}">Шаблон</a></li>
                         </ul>
                     </div>
-                </div>
-            {% endif %}
+                    <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                {% endif %}
+            </div>
         </div>
     </header>
     

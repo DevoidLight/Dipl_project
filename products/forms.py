@@ -14,4 +14,4 @@ class PaintsCreate(forms.ModelForm):
 class TemplatesCreate(forms.ModelForm):
     class Meta:
         model = Tempaltes
-        fields = ('image',)
+        fields = ('name', 'image')

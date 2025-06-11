@@ -7,6 +7,9 @@ class Ribbons(models.Model):
     length = models.IntegerField()
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def __str__(self):
+        return self.color
+
 
 class Paints(models.Model):
     color = models.CharField(max_length=48)
@@ -14,6 +17,12 @@ class Paints(models.Model):
     length = models.IntegerField()
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def __str__(self):
+        return self.color
 
 class Tempaltes(models.Model):
+    name = models.CharField(max_length=48)
     image = models.ImageField(upload_to='products/templates')
+
+    def __str__(self):
+        return self.name
