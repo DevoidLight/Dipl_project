@@ -1,4 +1,8 @@
 <h1>{{ order.id }}</h1>
 <p>{{ order.count_rhinestones }}</p>
+<p>Ribbon - {{ order.ribbon.color }}</p>
+<p>Paint - {{ order.paint.color }}</p>
+<p>Class number - {{ order.class_number }}</p>
+<p>School name - {{ order.scholl }}</p>
 <input type="hidden" id="order-id" value="{{ order.id }}">
 <button class="end-order">Завершить заказ</button>

@@ -60,7 +60,7 @@ def paint_create(request):
 @role_required('director')
 def template_create(request):
     if request.method == 'POST':
-        form = TemplatesCreate(data=request.POST)
+        form = TemplatesCreate(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
             return redirect(reverse('orders'))

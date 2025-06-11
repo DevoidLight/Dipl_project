@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from users.decorators import role_required
 
 # Create your views here.
-@role_required('printer', 'gluer', 'director')
+@role_required('printer', 'gluer', 'director', 'packer')
 def work(request):
     if request.method == 'POST':
         orders = Orders.objects.all()
@@ -23,7 +23,7 @@ def work(request):
                     return render(request, 'work/include/gluer.html', {'order': order})
         if request.user.role == 'packer':
             for order in orders:
-                if order.status == 'gluer':
+                if order.status == 'gluing':
                     order.packer = request.user
                     order.save()
                     return render(request, 'work/include/packer.html', {'order': order})
@@ -32,8 +32,10 @@ def work(request):
 
 def endprint(request, order_id):
     order = Orders.objects.get(id=order_id)
-    if order.start  == 'gluing':
-        order.status == 'done'
+    print(order.status)
+    if order.status  == 'gluing':
+        order.status = 'done'
+        print(order.status)
     if order.status == 'printing':
         order.status = 'gluing'
     if order.status == 'paid':
@@ -42,6 +44,8 @@ def endprint(request, order_id):
         paint = order.paint
         paint.length = paint.length - (order.count * 2)
         ribbon.save()
+        paint.save()
         order.status = 'printing'
     order.save()
+    print(order.status)
     return JsonResponse({'status': 'succes'})

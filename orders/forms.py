@@ -7,4 +7,4 @@ class OrderCreateForm(forms.ModelForm):
         model = Orders
         fields = ['ribbon', 'paint', 'template', 'class_list', 'teacher_name',
                 'deploy', 'school', 'class_number', 'client_phone',
-                'count', 'rhinestones', 'count_rhinestones', 'address']
+                'count', 'rhinestones', 'count_rhinestones', 'address', 'total_price']

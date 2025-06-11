@@ -1,23 +1,208 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Отчет для директора</h1>
-<p>Период: {{ period }}</p>
+    <div class="report-container">
+        <h1 class="report-title">Отчет для директора</h1>
+        <h2 class="report-period">Отчет за период: <span class="period-value">{{ period }}</span></h2>
+        
+        <div class="report-summary">
+            <p class="summary-item">Всего заказов: <span class="summary-value">{{ total_orders }}</span></p>
+            <p class="summary-item">Общая выручка: <span class="summary-value">{{ total_revenue }}</span> руб.</p>
+        </div>
 
-<div class="metrics">
-    <h3>Основные показатели:</h3>
-    <p>Всего заказов: {{ total_orders }}</p>
-    <p>Выручка: {{ total_revenue }} руб.</p>
-</div>
+        <div class="report-section">
+            <h3 class="section-title">Менеджеры</h3>
+            <ul class="employee-list">
+            {% for manager in managers %}
+                <li class="employee-item">
+                    <span class="employee-name">{{ manager.manager__first_name }} {{ manager.manager__last_name }}</span>: 
+                    <span class="employee-stats">{{ manager.total_orders }} заказов</span>
+                    (<span class="employee-revenue">{{ manager.total_revenue }}</span> руб.)
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
 
+        <div class="report-section">
+            <h3 class="section-title">Печатники</h3>
+            <ul class="employee-list">
+            {% for printer in printers %}
+                <li class="employee-item">
+                    <span class="employee-name">{{ printer.printer__first_name }} {{ printer.printer__last_name }}</span>: 
+                    <span class="employee-stats">{{ printer.total_orders }} заказов</span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
 
-<!-- Форма для выбора периода -->
-<form method="GET">
-    <input type="date" name="start_date">
-    <input type="date" name="end_date">
-    <button type="submit">Применить</button>
-</form>
-<form method="GET">
-    <button type="submit">Показать весь период</button>
-</form>
+        <div class="report-section">
+            <h3 class="section-title">Клейщики страз</h3>
+            <ul class="employee-list">
+            {% for gluer in gluers %}
+                <li class="employee-item">
+                    <span class="employee-name">{{ gluer.gluer__first_name }} {{ gluer.gluer__last_name }}</span>: 
+                    <span class="employee-stats">{{ gluer.total_orders }} заказов</span>
+                    (<span class="rhinestones-count">{{ gluer.total_rhinestones }}</span> страз)
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+
+        <div class="report-section">
+            <h3 class="section-title">Упаковщики</h3>
+            <ul class="employee-list">
+            {% for packer in packers %}
+                <li class="employee-item">
+                    <span class="employee-name">{{ packer.packer__first_name }} {{ packer.packer__last_name }}</span>: 
+                    <span class="employee-stats">{{ packer.total_orders }} заказов</span>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+
+        <div class="report-filters">
+            <form class="date-filter" method="GET">
+                <input class="date-input" type="date" name="start_date">
+                <input class="date-input" type="date" name="end_date">
+                <button class="filter-button" type="submit">Применить</button>
+            </form>
+            <form method="GET">
+                <button class="filter-button full-period-button" type="submit">Показать весь период</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .report-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .report-title {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .report-period {
+            color: #34495e;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .period-value {
+            font-weight: bold;
+            color: #16a085;
+        }
+
+        .report-summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+
+        .summary-item {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+
+        .summary-value {
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .report-section {
+            margin-bottom: 30px;
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .employee-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .employee-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .employee-item:last-child {
+            border-bottom: none;
+        }
+
+        .employee-name {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .employee-stats {
+            color: #16a085;
+        }
+
+        .employee-revenue {
+            color: #27ae60;
+        }
+
+        .rhinestones-count {
+            color: #8e44ad;
+        }
+
+        .report-filters {
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .filter-button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .filter-button:hover {
+            background-color: #2980b9;
+        }
+
+        .full-period-button {
+            background-color: #95a5a6;
+        }
+
+        .full-period-button:hover {
+            background-color: #7f8c8d;
+        }
+    </style>
 {% endblock %}

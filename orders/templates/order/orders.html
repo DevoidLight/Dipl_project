@@ -1,77 +1,164 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="orders-container">
+        <h1 class="orders-title">Orders page</h1>
+        <a class="create-order-link" href="{% url 'create' %}">Добавить заказ</a>
+        
+        <div class="orders-table-container">
+            <table class="orders-table">
+                <thead class="orders-table-header">
+                    <tr class="orders-table-row">
+                        <th class="orders-table-header-cell">ID</th>
+                        <th class="orders-table-header-cell">Deploy Date</th>
+                        <th class="orders-table-header-cell">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="orders-table-body">
+                    {% for order in orders %}
+                        <tr class="orders-table-row">
+                            <td class="orders-table-cell">{{ order.id }}</td>
+                            <td class="orders-table-cell">{{ order.deploy }}</td>
+                            <td class="orders-table-cell">
+                                {% if order.status == 'accept' %}
+                                <select class="status-select" data-order-id="{{ order.id }}">
+                                    <option value="accept">{{ order.status }}</option>
+                                    {% if order.status != 'Оплачено' %}
+                                        <option value="Оплачен">Оплачен</option>
+                                    {% endif %}
+                                </select>
+                                {% else %}
+                                    <span class="order-status">{{ order.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <style>
-        table {
+        .orders-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .orders-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .create-order-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .create-order-link:hover {
+            background-color: #2980b9;
+        }
+
+        .orders-table-container {
+            overflow-x: auto;
+        }
+
+        .orders-table {
+            width: 100%;
             border-collapse: collapse;
-            width: 100%;
+            margin-top: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        th, td {
-            border: 1px solid #dddddd;
+
+        .orders-table-header {
+            background-color: #f8f9fa;
+        }
+
+        .orders-table-header-cell {
+            padding: 12px 15px;
             text-align: left;
-            padding: 8px;
+            font-weight: 600;
+            color: #34495e;
+            border-bottom: 2px solid #dee2e6;
         }
-        th {
-            background-color: #f2f2f2;
+
+        .orders-table-row {
+            transition: background-color 0.2s;
         }
-        select {
-            width: 100%;
-            padding: 5px;
+
+        .orders-table-row:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .orders-table-row:hover {
+            background-color: #e9ecef;
+        }
+
+        .orders-table-cell {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 14px;
+            color: #495057;
+            cursor: pointer;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .status-select:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: 500;
         }
     </style>
-    <h1>Orders page</h1>
-    <a href="{% url 'create' %}">Добавить заказ</a>
-    <table>
-        <tr>
-            <th>id</th>
-            <th>deploy</th>
-            <th>status</th>
-        </tr>
-       
-        {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.deploy }}</td>
-                <td>
-                    {% if order.status == 'accept' %}
-                    <select class="status-select" data-order-id="{{ order.id }}">
-                        <option value="accept">{{ order.status }}</option>
-                        {% if order.status != 'Оплачено' %}
-                            <option value="Оплачен">Оплачен</option>
-                        {% endif %}
-                    </select>
-                    {% else %}
-                        {{ order.status }}
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% block script %}
-        <script>
-            document.addEventListener("DOMContentLoaded", (event) => {
-                csrftoken = Cookies.get('csrftoken')
-                const statusSelects = document.querySelectorAll('.status-select')
+{% endblock %}
 
-                statusSelects.forEach(select => {
-                    select.addEventListener('change', function() {
-                        const orderId = this.dataset.orderId
-                        const newStatus = this.value
-                        const data = {
-                            id: orderId,
-                            status: newStatus
-                        }
-                        fetch('', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': csrftoken
-                            },
-                            body: JSON.stringify(data)
-                        })
+{% block script %}
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            csrftoken = Cookies.get('csrftoken')
+            const statusSelects = document.querySelectorAll('.status-select')
+
+            statusSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    const orderId = this.dataset.orderId
+                    const newStatus = this.value
+                    const data = {
+                        id: orderId,
+                        status: newStatus
+                    }
+                    fetch('', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken
+                        },
+                        body: JSON.stringify(data)
                     })
                 })
             })
-        </script>
-    {% endblock %}
+        })
+    </script>
 {% endblock %}

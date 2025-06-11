@@ -1,10 +1,178 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Create order</h1>
-    <form action="" method="post">
-        {{form.as_p}}
-        {% csrf_token %}
-        <input type="submit" value="Create">
-    </form>
+    <style>
+        .order-form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .order-form-field {
+            margin-bottom: 15px;
+        }
+        .order-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-form-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .order-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .order-form-fields p {
+            margin-bottom: 15px;
+        }
+
+        .order-form-fields label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .order-form-fields input,
+        .order-form-fields select,
+        .order-form-fields textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .order-form-fields input:focus,
+        .order-form-fields select:focus,
+        .order-form-fields textarea:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .order-form-submit {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .order-form-submit:hover {
+            background-color: #3a7bc8;
+        }
+
+        .order-form-fields .helptext {
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .order-form-fields .errorlist {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            list-style: none;
+            padding-left: 0;
+        }
+    </style>
+     <div class="order-form-container">
+        <h1 class="order-form-title">Create order</h1>
+        <form class="order-form" action="" method="post">
+            {% csrf_token %}
+            
+            <div class="order-form-row">
+                <div class="order-form-field">
+                    {{ form.ribbon.label_tag }}
+                    {{ form.ribbon }}
+                    {{ form.ribbon.errors }}
+                </div>
+                
+                <div class="order-form-field">
+                    {{ form.paint.label_tag }}
+                    {{ form.paint }}
+                    {{ form.paint.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.template.label_tag }}
+                    {{ form.template }}
+                    {{ form.template.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.class_list.label_tag }}
+                    {{ form.class_list }}
+                    {{ form.class_list.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.teacher_name.label_tag }}
+                    {{ form.teacher_name }}
+                    {{ form.teacher_name.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.deploy.label_tag }}
+                    {{ form.deploy }}
+                    {{ form.deploy.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.school.label_tag }}
+                    {{ form.school }}
+                    {{ form.school.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.class_number.label_tag }}
+                    {{ form.class_number }}
+                    {{ form.class_number.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.client_phone.label_tag }}
+                    {{ form.client_phone }}
+                    {{ form.client_phone.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.count.label_tag }}
+                    {{ form.count }}
+                    {{ form.count.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.rhinestones.label_tag }}
+                    {{ form.rhinestones }}
+                    {{ form.rhinestones.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.count_rhinestones.label_tag }}
+                    {{ form.count_rhinestones }}
+                    {{ form.count_thinestones.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.address.label_tag }}
+                    {{ form.address }}
+                    {{ form.address.errors }}
+                </div>
+                <div class="order-form-field">
+                    {{ form.total_price.label_tag }}
+                    {{ form.total_price }}
+                    {{ form.total_price.errors }}
+                </div>
+            </div>            
+            <button class="order-form-submit" type="submit">Create</button>
+        </form>
+    </div>
 {% endblock %}
