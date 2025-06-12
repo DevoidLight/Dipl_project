@@ -9,7 +9,9 @@ def work(request):
     if request.method == 'POST':
         orders = Orders.objects.all()
         if request.user.role == 'printer':
+            print('one stack')
             for order in orders:
+                print(order.status)
                 if order.status == 'paid':
                     order.printer = request.user
                     order.save()

@@ -42,6 +42,7 @@ def orders(request):
 @role_required('manager', 'director')
 def create(request):
     if request.method == 'POST':
+        form = OrderCreateForm(data=request.POST)
         if form.is_valid():
             order = form.save(commit=False)
             order.manager = request.user

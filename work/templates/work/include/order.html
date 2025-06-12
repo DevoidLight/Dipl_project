@@ -1,10 +1,160 @@
-<h1>{{ order.id }}</h1>
-<p>Ribbon - {{ order.ribbon.color }}</p>
-<p>Paint - {{ order.paint.color }}</p>
-<p>Class number - {{ order.class_number }}</p>
-<p>Teacher name - {{ order.teacher_name }}</p>
-<p>Template - <img src="{{ order.template.image.url }}" alt=""></p>
-<p>School name - {{ order.school }}</p>
-<p>{{ order.class_list }}</p>
-<input type="hidden" id="order-id" value="{{ order.id }}">
-<button class="end-order">Завершить заказ</button>
+<div class="order-details-container">
+    <h1 class="order-id">Заказ #{{ order.id }}</h1>
+    
+    <div class="order-section">
+        <h2 class="section-title">Детали заказа</h2>
+        <div class="order-grid">
+            <div class="order-item">
+                <span class="order-label">Лента:</span>
+                <span class="order-value ribbon-color">{{ order.ribbon.color }}</span>
+            </div>
+            <div class="order-item">
+                <span class="order-label">Краска:</span>
+                <span class="order-value paint-color">{{ order.paint.color }}</span>
+            </div>
+            <div class="order-item">
+                <span class="order-label">Класс:</span>
+                <span class="order-value">{{ order.class_number }}</span>
+            </div>
+            <div class="order-item">
+                <span class="order-label">Учитель:</span>
+                <span class="order-value">{{ order.teacher_name }}</span>
+            </div>
+            <div class="order-item">
+                <span class="order-label">Школа:</span>
+                <span class="order-value">{{ order.school }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h2 class="section-title">Шаблон</h2>
+        <div class="template-container">
+            <img class="template-image" src="{{ order.template.image.url }}" alt="Шаблон для заказа">
+        </div>
+    </div>
+
+    <div class="order-section">
+        <h2 class="section-title">Список класса</h2>
+        <div class="class-list">
+            {{ order.class_list|linebreaks }}
+        </div>
+    </div>
+
+    <input type="hidden" id="order-id" value="{{ order.id }}">
+    <button class="complete-order-btn">Завершить заказ</button>
+</div>
+
+<style>
+    .order-details-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 25px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .order-id {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .order-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        color: #3498db;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .order-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+    }
+
+    .order-label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .order-value {
+        color: #333;
+    }
+
+    .ribbon-color {
+        font-weight: bold;
+        color: #e74c3c;
+    }
+
+    .paint-color {
+        font-weight: bold;
+        color: #3498db;
+    }
+
+    .template-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .template-image {
+        max-width: 100%;
+        max-height: 300px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .class-list {
+        white-space: pre-line;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        line-height: 1.6;
+    }
+
+    .complete-order-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 30px;
+    }
+
+    .complete-order-btn:hover {
+        background-color: #219653;
+    }
+
+    @media (max-width: 768px) {
+        .order-details-container {
+            padding: 15px;
+            margin: 15px;
+        }
+        
+        .order-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
