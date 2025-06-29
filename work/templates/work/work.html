@@ -2,10 +2,12 @@
 
 {% block content %}
     <div class="work-page">
-        <h1 class="work-title">Work page</h1>
+        <h1 class="work-title">Рабочая страница</h1>
         <div class="work-container">
-            <button class="work-get-order">Get order</button>
-            <p class="work-orders-count">Всего заказов - <span class="count-value">{{ orders_count }}</span></p>
+            <div class="order">
+
+            </div>
+            <button class="work-get-order">Получить заказ</button>
         </div>
     </div>
 
@@ -162,7 +164,7 @@
         document.addEventListener("DOMContentLoaded", (event) => {
             const csrftoken = Cookies.get('csrftoken');
             const getOrder = document.querySelector('.work-get-order');
-            const order = document.querySelector('.work-container');
+            const order = document.querySelector('.order');
             let endOrder;
 
             getOrder.addEventListener('click', function() {
@@ -177,6 +179,7 @@
                 .then(html => {
                     order.innerHTML = html;
                     const orderId = document.getElementById('order-id').value;
+                    getOrder.style.display = 'none'
                     endOrder = document.querySelector('.complete-order-btn'); 
                     endOrder.dataset.orderId = orderId;
                 });
@@ -195,7 +198,8 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'succes') { 
-                            order.innerHTML = '<button class="work-get-order">Get order</button>';
+                            order.innerHTML = ''
+                            getOrder.style.display = 'block'
                         }
                     });
                 }

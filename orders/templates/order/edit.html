@@ -96,7 +96,7 @@
         }
     </style>
      <div class="order-form-container">
-        <h1 class="order-form-title">Добавить заказ</h1>
+        <h1 class="order-form-title">Редактировать заказ</h1>
         <form class="order-form" action="" method="post">
             {% csrf_token %}
             
@@ -186,7 +186,7 @@
                     {{ form.total_price.errors }}
                 </div>
             </div>            
-            <button class="order-form-submit" type="submit">Добавить</button>
+            <button class="order-form-submit" type="submit">Сохранить</button>
         </form>
     </div>
 {% endblock %}

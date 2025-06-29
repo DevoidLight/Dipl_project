@@ -86,11 +86,10 @@
         <div class="nav-container">
             <div class="main-nav">
                 {% if user.role == 'director' %}
-                    <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                    <a class="nav-link" href="{% url 'work' %}">Work</a>
-                    <a class="nav-link" href="{% url 'orders' %}">Orders</a>
-                    <a class="nav-link" href="{% url 'products' %}">Products</a>
-                    <a class="nav-link" href="{% url 'director_report' %}">Report</a>
+                    <a class="nav-link" href="{% url 'admin:index' %}">Админ-панель</a>
+                    <a class="nav-link" href="{% url 'orders' %}">Заказы</a>
+                    <a class="nav-link" href="{% url 'products' %}">Продукты</a>
+                    <a class="nav-link" href="{% url 'director_report' %}">Отчет</a>
                     <a class="nav-link" href="{% url 'register' %}">Добавить аккаунт</a>
                     <div class="nav-item">
                         <a class="nav-link dropdown-toggle" href="#" role="button">Добавить продукт</a>
@@ -101,8 +100,10 @@
                         </ul>
                     </div>
                 {% endif %}
-                <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
-            </div>
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                {% endif %}
+                </div>
         </div>
     </header>
     

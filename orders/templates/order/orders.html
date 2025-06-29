@@ -1,55 +1,215 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="orders-container">
-        <h1 class="orders-title">Orders page</h1>
-        <a class="create-order-link" href="{% url 'create' %}">Добавить заказ</a>
         
-        <div class="orders-table-container">
-            <table class="orders-table">
-                <thead class="orders-table-header">
-                    <tr class="orders-table-row">
-                        <th class="orders-table-header-cell">ID</th>
-                        <th class="orders-table-header-cell">Deploy Date</th>
-                        <th class="orders-table-header-cell">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="orders-table-body">
-                    {% for order in orders %}
-                        <tr class="orders-table-row">
-                            <td class="orders-table-cell">{{ order.id }}</td>
-                            <td class="orders-table-cell">{{ order.deploy }}</td>
-                            <td class="orders-table-cell">
-                                {% if order.status == 'accept' %}
-                                <select class="status-select" data-order-id="{{ order.id }}">
-                                    <option value="accept">{{ order.status }}</option>
-                                    {% if order.status != 'Оплачено' %}
-                                        <option value="Оплачен">Оплачен</option>
-                                    {% endif %}
-                                </select>
-                                {% else %}
-                                    <span class="order-status">{{ order.status }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
+        
     <style>
+        /* Общие стили страницы */
         .orders-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            max-width: 100%;
             padding: 20px;
-            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
         }
 
-        .orders-title {
+        /* Заголовок страницы */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
             color: #2c3e50;
+            margin: 0;
+        }
+
+        /* Фильтры и поиск */
+        .order-filters {
+            display: flex;
+            gap: 15px;
             margin-bottom: 20px;
-            font-size: 28px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .filter-select, .search-input {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-input {
+            min-width: 250px;
+        }
+
+        /* Таблица заказов */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .orders-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 500;
+            padding: 12px 15px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+        }
+
+        .orders-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .orders-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .orders-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Стили статусов */
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-accept { background-color: #6c757d; color: white; }
+        .status-paid { background-color: #17a2b8; color: white; }
+        .status-printing { background-color: #007bff; color: white; }
+        .status-gluing { background-color: #ffc107; color: #212529; }
+        .status-packing { background-color: #fd7e14; color: white; }
+        .status-done { background-color: #28a745; color: white; }
+
+        /* Иконки и специальные элементы */
+        .rhinestone-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background-size: contain;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .urgent {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        /* Адаптация для мобильных */
+        @media (max-width: 768px) {
+            .orders-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+        }
+
+        /* Кнопки действий */
+    /* ... (остальные стили остаются без изменений) ... */
+
+    /* Обновленные стили кнопок действий */
+    .action-btns {
+        display: flex;
+        gap: 8px; /* Отступ между кнопками */
+    }
+
+    .action-btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.2s;
+        white-space: nowrap; /* Текст не переносится */
+        text-decoration: none; /* Убираем подчеркивание у ссылок */
+        display: inline-block;
+        text-align: center;
+    }
+
+    .edit-btn { 
+        background-color: #17a2b8; 
+        color: white;
+        min-width: 40px; /* Фиксированная ширина */
+    }
+    .edit-btn:hover { 
+        background-color: #138496;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .delete-btn { 
+        background-color: #dc3545; 
+        color: white;
+        min-width: 40px; /* Фиксированная ширина */
+    }
+    .delete-btn:hover { 
+        background-color: #c82333;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Иконки внутри кнопок */
+    .action-btn i {
+        margin-right: 4px;
+    }
+
+        /* Пагинация */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .page-item {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .page-item.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
         }
 
         .create-order-link {
@@ -66,73 +226,33 @@
         .create-order-link:hover {
             background-color: #2980b9;
         }
-
-        .orders-table-container {
-            overflow-x: auto;
-        }
-
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .orders-table-header {
-            background-color: #f8f9fa;
-        }
-
-        .orders-table-header-cell {
-            padding: 12px 15px;
-            text-align: left;
-            font-weight: 600;
-            color: #34495e;
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        .orders-table-row {
-            transition: background-color 0.2s;
-        }
-
-        .orders-table-row:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .orders-table-row:hover {
-            background-color: #e9ecef;
-        }
-
-        .orders-table-cell {
-            padding: 12px 15px;
-            border-bottom: 1px solid #dee2e6;
-            vertical-align: middle;
-        }
-
-        .status-select {
-            padding: 8px 12px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            background-color: white;
-            font-size: 14px;
-            color: #495057;
-            cursor: pointer;
-            transition: border-color 0.15s, box-shadow 0.15s;
-        }
-
-        .status-select:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
-        }
-
-        .order-status {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 3px;
-            font-size: 14px;
-            font-weight: 500;
-        }
     </style>
+    <div class="orders-container">
+        <div class="page-header">
+            <h1 class="page-title">Список заказов</h1>
+            <div>
+                <a class="create-order-link" href="{% url 'create' %}">Добавить заказ</a>   
+            </div>
+        </div>
+
+        <div class="order-filters">
+            <div class="filter-group">
+                <span class="filter-label">Статус:</span>
+                <select class="filter-select" id="status-filter">
+                    <option value="all">Все</option>
+                    <option value="accept">Принят</option>
+                    <option value="paid">Оплачен</option>
+                    <option value="printing">Печать</option>
+                    <option value="gluing">Клейка страз</option>
+                    <option value="packing">Упаковка</option>
+                    <option value="done">Завершен</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="orders-table-container">
+            {% include 'order/include/orders_filter.html' %}
+        </div>
 {% endblock %}
 
 {% block script %}
@@ -140,6 +260,18 @@
         document.addEventListener("DOMContentLoaded", (event) => {
             csrftoken = Cookies.get('csrftoken')
             const statusSelects = document.querySelectorAll('.status-select')
+            const statusFilter = document.getElementById('status-filter')
+
+            statusFilter.addEventListener('change', function() {
+                fetch(`?status=${this.value}`, {
+                    method: 'GET'
+                })
+                .then(response => response.text())
+                .then(html => {
+                    console.log(html)
+                    document.querySelector('.orders-table-container').innerHTML = html
+                })
+            })
 
             statusSelects.forEach(select => {
                 select.addEventListener('change', function() {
@@ -156,6 +288,12 @@
                             'X-CSRFToken': csrftoken
                         },
                         body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            document.querySelector(`.order-status-${orderId}`).innerHTML = `<span class="status status-paid">Оплачено</span>`
+                        }
                     })
                 })
             })
